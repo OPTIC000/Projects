@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Покупатель" as User
+actor "Администратор" as Admin
+actor "Внешняя Платёжная Система" as PaymentSystem
+
+rectangle "Интернет-магазин" {
+  usecase "Поиск товаров" as U1
+  usecase "Добавить товар в корзину" as U2
+  usecase "Оформить заказ" as U3
+  usecase "Оплатить заказ" as U4
+  usecase "Управление каталогом" as U5
+  usecase "Авторизоваться" as U6
+  usecase "Использовать промокод" as U7
+}
+
+' Обобщение акторов (generalization)
+User <|-- Admin
+
+' Ассоциации акторов с прецедентами
+User --> U1
+User --> U2
+User --> U3
+User --> U6
+User --> U7
+Admin --> U5
+Admin --> U6
+
+' Ассоциация с внешней системой
+PaymentSystem --> U4
+
+' Отношение include: Оформить заказ всегда включает авторизацию
+U3 ..> U6 : <<include>>
+
+' Отношение extend: Оплата заказа может быть расширена использованием промокода
+U4 <|.. U7 : <<extend>>
+
+@enduml
